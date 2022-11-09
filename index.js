@@ -54,11 +54,11 @@ async function run() {
         })
 
 
-        // wildanimal project
+        // ========= wildanimal project ========= //
         const AddServiceCollection = client.db("winterShopDb").collection("services");
         app.post('/services', async (req, res) => {
             const user = req.body;
-            console.log(user);
+            // console.log(user);
             const result = await AddServiceCollection.insertOne(user);
             res.send(result);
         })
@@ -68,7 +68,7 @@ async function run() {
             let query = {};
             const cursor = AddServiceCollection.find(query);
             const users = await cursor.toArray();
-            console.log(users);
+            // console.log(users);
             res.send(users);
         })
 
@@ -79,6 +79,28 @@ async function run() {
             const user = await AddServiceCollection.findOne(query);
             res.send(user);
         })
+
+
+        // ----------- user review section development part ----------- //
+        const userReviewCollection = client.db("winterShopDb").collection("userreview");
+
+        // send all review usr data on the database
+        app.post('/userreview', async (req, res) => {
+            const user = req.body;
+            console.log(user);
+            const result = await userReviewCollection.insertOne(user);
+            res.send(result);
+        })
+
+        // get all review usr data on the database
+        app.get('/userreview', async (req, res) => {
+            let query = {};
+            const cursor = userReviewCollection.find(query);
+            const users = await cursor.toArray();
+            // console.log(users);
+            res.send(users);
+        })
+
 
 
     }
