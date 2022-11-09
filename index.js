@@ -20,15 +20,8 @@ app.get('/', (req, res) => {
 // password:ZToJVTt6iS0C5mKl
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.gplljg9.mongodb.net/?retryWrites=true&w=majority`;
-
-
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
 
-// client.connect(err => {
-//     const UserCollection = client.db("winterShopDb").collection("registeruser");
-//     // perform actions on the collection object
-//     client.close();
-// });
 
 async function run() {
     try {
@@ -62,7 +55,31 @@ async function run() {
 
 
         // wildanimal project
-        
+        const AddServiceCollection = client.db("winterShopDb").collection("services");
+        app.post('/services', async (req, res) => {
+            const user = req.body;
+            console.log(user);
+            const result = await AddServiceCollection.insertOne(user);
+            res.send(result);
+        })
+
+        // now we take all the register data from database
+        app.get('/services', async (req, res) => {
+            let query = {};
+            const cursor = AddServiceCollection.find(query);
+            const users = await cursor.toArray();
+            console.log(users);
+            res.send(users);
+        })
+
+        // step:1 take single data from api
+        app.get('/services/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) }
+            const user = await AddServiceCollection.findOne(query);
+            res.send(user);
+        })
+
 
     }
     finally {
