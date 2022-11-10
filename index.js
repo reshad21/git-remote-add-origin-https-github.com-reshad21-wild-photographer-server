@@ -139,5 +139,3 @@ run().catch(console.dir);
 app.listen(port, () => {
     console.log(`Listening to the port ${port}`);
 })
-
-terminalol
