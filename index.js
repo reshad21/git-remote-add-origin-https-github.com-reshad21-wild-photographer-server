@@ -140,4 +140,4 @@ app.listen(port, () => {
     console.log(`Listening to the port ${port}`);
 })
 
-server side deploy
+terminalol
