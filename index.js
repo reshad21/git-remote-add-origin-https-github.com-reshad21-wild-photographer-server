@@ -14,11 +14,6 @@ app.get('/', (req, res) => {
     res.send('server is running');
 })
 
-// console.log(process.env.DB_USER)
-// console.log(process.env.DB_PASSWORD)
-// username:winteruser
-// password:ZToJVTt6iS0C5mKl
-
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.gplljg9.mongodb.net/?retryWrites=true&w=majority`;
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
 
@@ -81,7 +76,7 @@ async function run() {
             res.send(users);
         })
 
-        // get data by email adress
+        // get data by email address
         app.get('/emailuserreview', async (req, res) => {
             let query = {};
             if (req.query.email) {
@@ -89,15 +84,10 @@ async function run() {
                     email: req.query.email
                 }
             }
-            const cursor = userReviewCollection.find(query);
+            const cursor = userReviewCollection.find(query).sort({ postedTime: -1 });
             const orders = await cursor.toArray();
             res.send(orders);
         })
-
-
-        // ==================================== //
-
-        // ==================================== //
 
 
         // get single review for a user
@@ -128,25 +118,15 @@ async function run() {
 
         // step:2 now we update the value
         app.put('/update/:id', async (req, res) => {
-            const id = req.body.params;
-            const filter = { _id: ObjectId(id) }
-            const user = req.body;
-            const option = { upsert: true };
-            const updatedUser = {
-                $set: {
-                    // name: user.name,
-                    // address: user.address,
-                    // email: user.email,
-                    review: user.review,
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const result = await userReviewCollection.updateOne(query, {
+                $set: req.body
+            })
 
-                }
-            }
-            const result = await userReviewCollection.updateOne(filter, updatedUser, option);
             res.send(result);
+
         })
-
-
-
 
     }
     finally {
@@ -154,9 +134,6 @@ async function run() {
     }
 }
 run().catch(console.dir);
-
-
-
 
 
 app.listen(port, () => {
