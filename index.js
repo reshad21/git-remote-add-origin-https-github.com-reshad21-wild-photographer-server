@@ -67,6 +67,14 @@ async function run() {
         app.get('/services', async (req, res) => {
             let query = {};
             const cursor = AddServiceCollection.find(query);
+            const users = await cursor.limit(3).toArray();
+            // console.log(users);
+            res.send(users);
+        })
+
+        app.get('/allservices', async (req, res) => {
+            let query = {};
+            const cursor = AddServiceCollection.find(query);
             const users = await cursor.toArray();
             // console.log(users);
             res.send(users);
@@ -100,6 +108,35 @@ async function run() {
             // console.log(users);
             res.send(users);
         })
+
+        // get single review for a user
+        app.get('/userreview/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) }
+            const user = await userReviewCollection.findOne(query);
+            res.send(user);
+        })
+
+        // app.get('/userreview', async (req, res) => {
+        //     let query = {};
+        //     if (req.query.email) {
+        //         query = {
+        //             email: req.query.email
+        //         }
+        //     }
+        //     const cursor = userReviewCollection.find(query);
+        //     const orders = await cursor.toArray();
+        //     res.send(orders);
+        // })
+
+        // Delete a single review from client side
+        app.delete('/userreview/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) }
+            const result = await userReviewCollection.deleteOne(query);
+            res.send(result);
+        })
+
 
 
 
