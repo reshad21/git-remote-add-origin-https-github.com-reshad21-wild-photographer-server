@@ -140,5 +140,4 @@ app.listen(port, () => {
     console.log(`Listening to the port ${port}`);
 })
 
-
-index.js
+server side deploy
